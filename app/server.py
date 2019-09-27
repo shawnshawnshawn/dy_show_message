@@ -46,7 +46,7 @@ def handle(msg):
     r_info = msg.get('room')
     if r_info is not None:
         state = r_info.get("show_status")
-        if state == 2:
+        if state == 1:
             if of:
                 # 发送邮件
                 result = send_mail(r_info.get('room_url'))
