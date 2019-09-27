@@ -46,11 +46,12 @@ def handle(msg):
     r_info = msg.get('room')
     if r_info is not None:
         state = r_info.get("show_status")
-        if state == 1:
+        if state == 2:
             if of:
                 # 发送邮件
-                send_mail(r_info.get('room_url'))
-                of = False
+                result = send_mail(r_info.get('room_url'))
+                if result == 'success':
+                    of = False
             else:
                 print("已发过邮件不在发送!")
         else:
@@ -72,21 +73,25 @@ def execute_ap(r_id):
 
 
 def send_mail(l_url):
+    # 局部定义全局变量
     global smtp
-    recv = '858261367@qq.com'
-    mail = MIMEText('您订阅的主播开播了!!!!!!!!!直播地址: ' + l_url)
-    mail['Subject'] = '斗鱼主播开播提醒'
+    mail = MIMEText(setting.msg + l_url)
+    mail['Subject'] = setting.topic
     mail['Form'] = setting.sender
-    mail['To'] = recv
+    mail['To'] = setting.recv
     try:
-        smtp = smtplib.SMTP(setting.send_server, port=587)
+        smtp = smtplib.SMTP(setting.send_server, port=setting.server_port)
         # 下面这两个要加上,否则会报 'SMTP AUTH extension not supported by server' 错误
         smtp.ehlo()
         smtp.starttls()
         smtp.login(setting.sender, setting.s_pwd)
-        smtp.sendmail(setting.sender, recv, mail.as_string())
+        smtp.sendmail(setting.sender, setting.recv, mail.as_string())
     except smtplib.SMTPException as e:
         print('发送邮件失败: ' + str(e))
+        if e.args.__contains__(535):
+            print('发送者邮箱账号或密码错误!')
+        return 'fail'
     finally:
         smtp.close()
-        print('success')
+    print('邮件发送成功!!!')
+    return 'success'
