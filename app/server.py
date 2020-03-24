@@ -23,12 +23,12 @@ msg = '您订阅的主播 %s 开播了!!!!!!!!!直播地址: '
 topic = '斗鱼主播开播提醒'
 
 # 创建SQL连接
-sql_conn = pymysql.connect(host='118.31.106.204', user='root', password='root', database='personal', charset='utf8mb4')
+sql_conn = pymysql.connect(host='127.0.0.1', user='root', password='root', database='personal', charset='utf8mb4')
 # 获取光标(用于执行SQL语句)
 cursor = sql_conn.cursor()
 
 # redis连接
-redis = StrictRedis(host='118.31.106.204', port=6379, db=0)
+redis = StrictRedis(host='127.0.0.1', port=6379, db=0)
 
 # 调度器
 sc = sched.scheduler(time.time, time.sleep)
