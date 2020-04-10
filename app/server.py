@@ -94,8 +94,8 @@ def handle(msg, r_id):
                             if result == "success":
                                 retry = 0
                                 break
-                        redis.set('personal.email.room.send.%s.%s.%s' % (
-                            sub[1], sub[2], datetime.now().strftime('%Y-%m-%d')), 'DAY')
+                        redis.set('personal.email.room.send.%s.%s' % (
+                            sub[1], sub[2]), 'DAY')
                     except Exception as e:
                         logger.info(e)
                 else:
@@ -105,7 +105,7 @@ def handle(msg, r_id):
             print(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ' 主播 ' + r_info.get('nickname') + ' 尚未开播!!!!')
             for sub in subs:
                 redis.delete(
-                    'personal.email.room.send.%s.%s.%s' % (sub[1], sub[2], datetime.now().strftime('%Y-%m-%d')))
+                    'personal.email.room.send.%s.%s' % (sub[1], sub[2]))
 
 
 # 使用sched作为定时器
