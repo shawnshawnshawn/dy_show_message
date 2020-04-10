@@ -13,9 +13,9 @@ send_server = 'smtp.office365.com'
 # 邮件服务器端口
 server_port = 587
 # 发送邮箱
-sender = 'root@outlook.com'
+sender = 'jiangliuer_shawn@outlook.com'
 # 发送邮箱密码
-s_pwd = 'root'
+s_pwd = '*************'
 
 # 发送内容
 msg = '您订阅的主播 %s 开播了!!!!!!!!!直播地址: '
@@ -28,7 +28,7 @@ sql_conn = pymysql.connect(host='127.0.0.1', user='root', password='root', datab
 cursor = sql_conn.cursor()
 
 # redis连接
-redis = StrictRedis(host='127.0.0.1', port=6379, db=0)
+redis = StrictRedis(host='127.0.0.1', port=6379, db=0, password='root123')
 
 # 调度器
 sc = sched.scheduler(time.time, time.sleep)
@@ -82,8 +82,8 @@ def handle(msg, r_id):
                 logger.info(datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ' 主播 ' + r_info.get('nickname') + ' 无人订阅!!!!')
                 return
             for sub in subs:
-                if redis.get('personal.email.room.send.%s.%s.%s' % (
-                        sub[1], sub[2], datetime.now().strftime('%Y-%m-%d'))) is None:
+                if redis.get('personal.email.room.send.%s.%s' % (
+                        sub[1], sub[2])) is None:
                     # 发送邮件
                     print("id=%s,room_id=%s,sub_email=%s,is_sub=%s,create_time=%s" % (
                         sub[0], sub[1], sub[2], sub[3], sub[4]))
